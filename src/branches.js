@@ -274,7 +274,12 @@ export function renderBranches(ctx) {
   const border = `+-${"-".repeat(widths.worktree)}-+-${"-".repeat(widths.branch)}-+-${"-".repeat(widths.type)}-+-${"-".repeat(widths.ahead)}-+-${"-".repeat(widths.behind)}-+-${"-".repeat(widths.hash)}-+`;
   const header = `| ${padRight("Worktree", widths.worktree)} | ${padRight("Branch", widths.branch)} | ${padRight("Type", widths.type)} | ${padLeft("Ahead", widths.ahead)} | ${padLeft("Behind", widths.behind)} | ${padRight("Hash", widths.hash)} |`;
 
-  const lines = [formatHeading(["BRANCH STATUS", baseName, timeZone], color, terminalColumns), border, header, border];
+  const lines = [
+    formatHeading(["BRANCH STATUS VS", baseName, timeZone], color, terminalColumns),
+    border,
+    header,
+    border,
+  ];
 
   for (const row of rows) {
     if (row.isSpacer) {

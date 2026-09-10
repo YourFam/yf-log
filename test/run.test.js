@@ -180,8 +180,7 @@ test("--tags table has IANA heading and no Branch column", () => {
 test("--branches groups local/remote, Idle or dir name, default first", () => {
   const r = runCli(["--branches"], dir);
   assert.equal(r.code, 0);
-  assert.match(r.out, /BRANCH STATUS/);
-  assert.match(r.out, /UTC/);
+  assert.match(r.out, /BRANCH STATUS VS\s+main\s+UTC/);
   assert.match(r.out, /main/);
   assert.match(r.out, /feature/);
   assert.match(r.out, /No Remote/);
