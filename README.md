@@ -2,7 +2,7 @@
 
 Pretty git log tables for any repo.
 
-Bare `yf-log` is **today’s commits**. Also a calendar day, SHA range, tags, and branch / worktree status. Local timezone; IANA name in the heading. Node 20+.
+Three views: **today’s commits**, **all tags**, and **branch / worktree status**. Local timezone; IANA name in the heading. Node 20+.
 
 Does **not** run your test suite. No GitHub token. No LLM.
 
@@ -48,73 +48,86 @@ With **-D**, the binary lives in that repo’s `node_modules/.bin/`. Your shell 
 npx yf-log
 ```
 
-No install at all (npm fetches and runs the published package):
+No install (npm fetches the published package):
 
 ```bash
 npx @yourfam/yf-log
 npx yf-git-log
 ```
 
-`npx yf-git-log` is the unscoped alias of `@yourfam/yf-log` (same CLI, same version). Both are yours. npm rejects unscoped `yf-log` as too similar to existing `yflog`.
+`npx yf-git-log` is the unscoped alias of `@yourfam/yf-log` (same CLI, same version). npm rejects unscoped `yf-log` as too similar to existing `yflog`. After `-g`, the command is `yf-log`.
 
-## Usage
+Exactly one view per run.
 
-Exactly one view per run. Bare `yf-log` (no view flag, no SHAs) is today.
+## `yf-log`
+
+Today’s commits, midnight → now in the process timezone.
+
+Use this to see **what landed today**: short SHA, 24-hour time, tag, branch, subject. Oldest first. Date is in the heading, not a column.
 
 ```bash
-npx yf-git-log
-npx yf-git-log --watch
-npx yf-git-log --yday
-npx yf-git-log --date 2026-09-09
-npx yf-git-log --current
-npx yf-git-log --hide-skip-ci
-npx yf-git-log --tz America/New_York
-npx yf-git-log --tz Kolkata
-npx yf-git-log --tz-list
-
-npx yf-git-log abc1234 def5678
-npx yf-git-log abc1234..HEAD
-
-npx yf-git-log --tags
-npx yf-git-log --tags --watch
-
-npx yf-git-log --branches
-npx yf-git-log --branches --base main
-npx yf-git-log --branches --watch
+yf-log
 ```
 
-Friend one-liners: `npx @yourfam/yf-log` **and** `npx yf-git-log`. After `-g`, the command is `yf-log`.
+`# | SHA | Time | Tag | Branch | Commit`
 
-Two SHAs = both ends; `A..B` = git.
+Branch is git’s current decoration, not “committed on this branch.” It is often `-` unless that commit is still a branch tip.
 
-`--watch` redraws every 60s on bare `yf-log`, `--tags`, and `--branches`. If stdout is not a TTY it still loops and does not ANSI-wipe.
+Default is `--all` (every ref). `--current` is HEAD only. `--hide-skip-ci` drops subjects that match `[skip ci]`. `--raw` is one line per commit (`SHA  HH:MM  subject`) instead of a table.
+
+## `yf-log --tags`
+
+Every tag, newest creator date first.
+
+Use this to see **what was tagged, when, and which commit it points at**. Annotated tags show the peeled commit SHA and the tag subject.
+
+```bash
+yf-log --tags
+```
+
+`Tag | SHA | Date | Time | Commit`
+
+## `yf-log --branches`
+
+Local and remote branches versus a **base** branch.
+
+Use this to see **which branches are ahead or behind the default line**, the short hash, and whether the branch is checked out (`Idle` if not; otherwise the worktree directory name). The heading names the base: `BRANCH STATUS VS    main    Asia/Calcutta`.
+
+```bash
+yf-log --branches
+```
+
+Base resolution (no `--base`): `origin/HEAD` → `main` → `master`. Override with `--base staging`. Does not hardcode `staging`. Local row, then remote row; a local branch with no remote shows `No Remote`.
+
+## Other arguments
+
+| Argument | Applies to | What it does |
+|---|---|---|
+| `--yday` | commits | Yesterday’s calendar day (includes a Date column) |
+| `--date YYYY-MM-DD` | commits | That calendar day |
+| `abc def` | commits | Inclusive SHA range (both ends) |
+| `abc..HEAD` / `abc..` | commits | Git range (excludes start; `abc..` is `abc..HEAD`) |
+| `--watch` | today, `--tags`, `--branches` | Redraw every 60s. No TTY: still loops, no ANSI wipe. `--branches --watch` fetches at most once per hour |
+| `--tz <IANA>` | all views | Timezone (`Kolkata` → `Asia/Kolkata`). Heading prints the IANA name, never IST/EDT |
+| `--tz-list` | alone | Print all IANA names and exit (no git) |
+| `--current` / `--all` | today, `--yday`, `--date` | HEAD only, or every ref (default `--all`) |
+| `--hide-skip-ci` | today, `--yday`, `--date` | Hide `[skip ci]` subjects |
+| `--raw` | commit views | SHA, time, subject; no table |
+| `--base <branch>` | `--branches` | Ahead/behind base |
+| `--help` | — | Usage |
+
+Views are mutually exclusive. Two SHAs = both ends; `A..B` = git.
 
 ## Timezone
 
 The process timezone, not geolocation. Never defaults to `Asia/Kolkata`.
 
-1. `--tz <value>` (IANA, typed loosely: `Kolkata` → `Asia/Kolkata`, `hong-kong` → `Asia/Hong_Kong`)
+1. `--tz <value>` (IANA, typed loosely)
 2. Else `TZ` if it is a valid IANA name
 3. Else the OS zone from `Intl`
 4. Else `UTC`
 
-The heading always prints that IANA name. No `IST`, `EDT`, or other abbreviations. Dates are `YYYY-MM-DD`; times are 24-hour `17:21`.
-
-`--tz-list` prints every IANA name and exits (no git). Unknown `--tz` prints the 3 closest names. Ambiguous values (`america`) print candidates. There is no “did you mean?” prompt.
-
-## Columns
-
-Commit tables: `# | SHA | Date* | Time | Tag | Branch | Commit`
-
-Date is omitted on **today** (it is still in the heading). Shown on `--yday`, `--date`, and range.
-
-Tag and Branch come from git decorations. Branch is often `-` in repos that do not decorate every commit. That is expected.
-
-`--raw` (commit views): one line per commit, `SHA  HH:MM  subject`, with the same IANA heading above the list.
-
-`--tags`: `Tag | SHA | Date | Time | Commit`
-
-`--branches`: local + remote vs `--base` (default: `origin/HEAD` → `main` → `master`), ahead/behind, short hash, worktree directory name or `Idle`.
+Dates are `YYYY-MM-DD`. Times are 24-hour `17:21`. Unknown `--tz` prints the 3 closest names. Ambiguous values (`america`) print candidates. There is no “did you mean?” prompt.
 
 ANSI color when stdout is a TTY. No color when piped or `NO_COLOR` is set.
 
