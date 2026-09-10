@@ -57,9 +57,11 @@ npx yf-git-log
 
 `npx yf-git-log` is the unscoped alias of `@yourfam/yf-log` (same CLI, same version). npm rejects unscoped `yf-log` as too similar to existing `yflog`. After `-g`, the command is `yf-log`.
 
+## Main uses
+
 Exactly one view per run.
 
-## `yf-log`
+### `yf-log`
 
 Today’s commits, midnight → now in the process timezone.
 
@@ -75,7 +77,7 @@ Branch is git’s current decoration, not “committed on this branch.” It is 
 
 Default is `--all` (every ref). `--current` is HEAD only. `--hide-skip-ci` drops subjects that match `[skip ci]`. `--raw` is one line per commit (`SHA  HH:MM  subject`) instead of a table.
 
-## `yf-log --tags`
+### `yf-log --tags`
 
 Every tag, newest creator date first.
 
@@ -87,7 +89,7 @@ yf-log --tags
 
 `Tag | SHA | Date | Time | Commit`
 
-## `yf-log --branches`
+### `yf-log --branches`
 
 Local and remote branches versus a **base** branch.
 
