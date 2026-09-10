@@ -169,8 +169,10 @@ test("--tags table has IANA heading and no Branch column", () => {
   assert.equal(r.code, 0);
   assert.match(r.out, /ALL TAGS/);
   assert.match(r.out, /UTC/);
-  assert.match(r.out, /v1\.0/);
-  assert.match(r.out, /feat: eight/);
+  assert.match(r.out, /\| Tag\s+\| SHA\s+\| Date\s+\| Time\s+\| Commit\s+\|/);
+  assert.match(r.out, /\| v1\.0\s+\| [0-9a-f]+\s+\| 2026-09-08 \| \d{2}:\d{2} \| feat: eight/);
+  assert.doesNotMatch(r.out, /%x1f/);
+  assert.doesNotMatch(r.out, /1970-01-01/);
   assert.doesNotMatch(r.out, /\| Branch \|/);
   assert.doesNotMatch(r.out, /\| Worktree \|/);
 });

@@ -3,6 +3,40 @@ import { failStatus, gitStderr, gitStdout } from "./git.js";
 import { formatBoxTable, formatHeading } from "./table.js";
 import { formatHHmm, formatIsoDate } from "./time.js";
 
+/** Literal unit separator. `git log` pretty-format accepts `%x1f`; `for-each-ref` does not. */
+export const TAG_FIELD = "\u001f";
+
+export function tagRefFormat() {
+  return [
+    "%(refname:short)",
+    "%(objectname:short)",
+    "%(creatordate:unix)",
+    "%(contents:subject)",
+    "%(*objectname:short)",
+    "%(*creatordate:unix)",
+    "%(*contents:subject)",
+  ].join(TAG_FIELD);
+}
+
+/**
+ * @param {string} line
+ * @param {string} timeZone
+ */
+export function parseTagLine(line, timeZone) {
+  const [tag, sha, ts, subject, peeledSha, peeledTs, peeledSubject] = String(line).split(TAG_FIELD);
+  const useSha = (peeledSha || sha || "").trim();
+  const useTs = Number(ts) || Number(peeledTs) || 0;
+  const useSubject = (peeledSubject || subject || "").trim();
+  const ms = useTs * 1000;
+  return {
+    tag: (tag || "").trim(),
+    sha: useSha,
+    date: formatIsoDate(ms, timeZone),
+    time: formatHHmm(ms, timeZone),
+    commit: useSubject,
+  };
+}
+
 /**
  * @param {object} ctx
  * @param {string} ctx.timeZone
@@ -16,12 +50,7 @@ export function renderTags(ctx) {
   const { timeZone, color, terminalColumns, cwd, git, watch } = ctx;
   const result = git(
     cwd,
-    [
-      "for-each-ref",
-      "refs/tags",
-      "--sort=-creatordate",
-      "--format=%(refname:short)%x1f%(objectname:short)%x1f%(creatordate:unix)%x1f%(contents:subject)%x1f%(*objectname:short)%x1f%(*creatordate:unix)%x1f%(*contents:subject)",
-    ],
+    ["for-each-ref", "refs/tags", "--sort=-creatordate", `--format=${tagRefFormat()}`],
     { allowFail: true },
   );
   if (failStatus(result) !== 0) {
@@ -36,20 +65,7 @@ export function renderTags(ctx) {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .map((line) => {
-      const [tag, sha, ts, subject, peeledSha, peeledTs, peeledSubject] = line.split("\u001f");
-      const useSha = peeledSha || sha;
-      const useTs = Number(peeledTs || ts) || 0;
-      const useSubject = (peeledSubject || subject || "").trim();
-      const ms = useTs * 1000;
-      return {
-        tag: tag || "",
-        sha: useSha || "",
-        date: formatIsoDate(ms, timeZone),
-        time: formatHHmm(ms, timeZone),
-        commit: useSubject,
-      };
-    });
+    .map((line) => parseTagLine(line, timeZone));
 
   if (!rows.length) {
     return "No tags found.";

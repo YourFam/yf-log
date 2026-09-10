@@ -1,6 +1,6 @@
 {
   "name": "yf-git-log",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Unscoped alias of @yourfam/yf-log — pretty git log tables",
   "type": "module",
   "bin": {
@@ -38,6 +38,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@yourfam/yf-log": "0.1.0"
+    "@yourfam/yf-log": "0.1.1"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@yourfam/yf-log",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pretty git log tables for today, a calendar day, SHA range, tags, and branches",
   "type": "module",
   "bin": {
