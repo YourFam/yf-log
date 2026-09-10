@@ -8,7 +8,7 @@ Does **not** run your test suite. No GitHub token. No LLM.
 
 - **Source / README:** https://github.com/YourFam/yf-log
 - **npm:** https://www.npmjs.com/package/@yourfam/yf-log
-- **Unscoped alias:** https://www.npmjs.com/package/yf-log
+- **Unscoped alias:** https://www.npmjs.com/package/yf-git-log
 - **Issues:** https://github.com/YourFam/yf-log/issues
 
 ## Install
@@ -52,38 +52,38 @@ No install at all (npm fetches and runs the published package):
 
 ```bash
 npx @yourfam/yf-log
-npx yf-log
+npx yf-git-log
 ```
 
-`npx yf-log` is the unscoped alias of `@yourfam/yf-log` (same CLI, same version). Both are yours.
+`npx yf-git-log` is the unscoped alias of `@yourfam/yf-log` (same CLI, same version). Both are yours. npm rejects unscoped `yf-log` as too similar to existing `yflog`.
 
 ## Usage
 
 Exactly one view per run. Bare `yf-log` (no view flag, no SHAs) is today.
 
 ```bash
-npx yf-log
-npx yf-log --watch
-npx yf-log --yday
-npx yf-log --date 2026-09-09
-npx yf-log --current
-npx yf-log --hide-skip-ci
-npx yf-log --tz America/New_York
-npx yf-log --tz Kolkata
-npx yf-log --tz-list
+npx yf-git-log
+npx yf-git-log --watch
+npx yf-git-log --yday
+npx yf-git-log --date 2026-09-09
+npx yf-git-log --current
+npx yf-git-log --hide-skip-ci
+npx yf-git-log --tz America/New_York
+npx yf-git-log --tz Kolkata
+npx yf-git-log --tz-list
 
-npx yf-log abc1234 def5678
-npx yf-log abc1234..HEAD
+npx yf-git-log abc1234 def5678
+npx yf-git-log abc1234..HEAD
 
-npx yf-log --tags
-npx yf-log --tags --watch
+npx yf-git-log --tags
+npx yf-git-log --tags --watch
 
-npx yf-log --branches
-npx yf-log --branches --base main
-npx yf-log --branches --watch
+npx yf-git-log --branches
+npx yf-git-log --branches --base main
+npx yf-git-log --branches --watch
 ```
 
-Friend one-liners: `npx @yourfam/yf-log` **and** `npx yf-log`.
+Friend one-liners: `npx @yourfam/yf-log` **and** `npx yf-git-log`. After `-g`, the command is `yf-log`.
 
 Two SHAs = both ends; `A..B` = git.
 
@@ -143,7 +143,7 @@ cd alias
 npm publish --access public
 ```
 
-That second package is named `yf-log` and only shims the scoped CLI so `npx yf-log` cannot be squatted.
+That second package is named `yf-git-log` and only shims the scoped CLI so `npx yf-git-log` cannot be squatted. npm will not accept unscoped `yf-log` (too similar to `yflog`).
 
 ## License
 
