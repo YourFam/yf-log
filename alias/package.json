@@ -1,0 +1,43 @@
+{
+  "name": "yf-log",
+  "version": "0.1.0",
+  "description": "Unscoped alias of @yourfam/yf-log — pretty git log tables",
+  "type": "module",
+  "bin": {
+    "yf-log": "bin/yf-log.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "git",
+    "log",
+    "cli",
+    "table"
+  ],
+  "author": {
+    "name": "YourFam",
+    "email": "kamal@yourfam.co",
+    "url": "https://github.com/YourFam"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YourFam/yf-log.git",
+    "directory": "alias"
+  },
+  "bugs": {
+    "url": "https://github.com/YourFam/yf-log/issues"
+  },
+  "homepage": "https://github.com/YourFam/yf-log#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@yourfam/yf-log": "0.1.0"
+  }
+}

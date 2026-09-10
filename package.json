@@ -1,0 +1,45 @@
+{
+  "name": "@yourfam/yf-log",
+  "version": "0.1.0",
+  "description": "Pretty git log tables for today, a calendar day, SHA range, tags, and branches",
+  "type": "module",
+  "bin": {
+    "yf-log": "bin/yf-log.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "yf-log": "node ./bin/yf-log.js"
+  },
+  "keywords": [
+    "git",
+    "log",
+    "cli",
+    "table"
+  ],
+  "author": {
+    "name": "YourFam",
+    "email": "kamal@yourfam.co",
+    "url": "https://github.com/YourFam"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YourFam/yf-log.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YourFam/yf-log/issues"
+  },
+  "homepage": "https://github.com/YourFam/yf-log#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
